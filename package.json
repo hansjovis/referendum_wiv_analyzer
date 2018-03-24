@@ -1,0 +1,17 @@
+{
+  "name": "referendum_wiv_analyzer",
+  "version": "0.1.0",
+  "description": "A small personal project to analyze the results of the referendum on the Wiv 2017.",
+  "main": "server.js",
+  "dependencies": {
+    "request": "^2.85.0",
+    "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Hans-Christiaan Braun",
+  "license": "GNU GPL"
+}
