@@ -39,8 +39,8 @@ getLineFromResult = result => {
   let votesAgainst = result.parties[1].now.count;
   let votesBlanco = turnout - votesFor - votesAgainst;
 
-  let percAgainst = result.parties[0].now.perc;
-  let percFor = result.parties[1].now.perc;
+  let percFor = result.parties[0].now.perc;
+  let percAgainst = result.parties[1].now.perc;
   let percBlanco = (100.0 - percAgainst - percFor).toFixed(1);
 
   return [id, name, province, updated, eligible, turnout, percVoted, 
@@ -51,6 +51,7 @@ getLineFromResult = result => {
 scrapeResults = async () => {
 
   console.log("Scraping results of the referendum from the NOS...");
+  console.log('===============================');
 
   // Get the IDs of the municipalities, as appointed by the CBS,
   // from the NOS API.
@@ -61,28 +62,35 @@ scrapeResults = async () => {
   }); 
 
   // Make a new file stream to write to.
-  let outputStream = fs.createWriteStream(SAVE_PATH);
+  try {
+    let outputStream = fs.createWriteStream(SAVE_PATH);
 
-  // Write CSV header.
-  outputStream.write(['id','name','province','updated','eligible','turnout','turnout percentage',
+    // Write CSV header.
+    outputStream.write(['id','name','province','updated','eligible','turnout','turnout percentage',
     'votes for', 'votes against', 'none of the above', 
     'percentage for', 'percentage against', 'percentage NOTA'].join(';') + '\n');
 
-  // Retrieve the results for each municipality and write
-  // them to the stream.
-  municipalityIDs.forEach(
-    id => {
-      getReferendumResults(id).then(
-        result => {
-          console.log(`- Retrieved results from ${result.title} (${result.cbs})`);
-          let line = getLineFromResult(result);
-          outputStream.write(line);
-        }
-      ).catch(
-        error => console.log(error)
-      );
+    // Retrieve the results for each municipality and write
+    // them to the stream.
+    for(id of municipalityIDs) {
+      let result = await getReferendumResults(id);
+      console.log(`- Retrieved results from ${result.title} (${result.cbs})`);
+      let line = getLineFromResult(result);
+      outputStream.write(line);
     }
-  )
+
+    // Wrapping up.
+    console.log('===============================');
+    console.log('Closing file stream.');
+    outputStream.close();
+
+  } catch(error) {
+    console.log(error);
+  }
+
+  
+  
+
 }
 
 scrapeResults();
