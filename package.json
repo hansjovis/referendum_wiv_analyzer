@@ -4,8 +4,8 @@
   "description": "A small personal project to analyze the results of the referendum on the Wiv 2017.",
   "main": "server.js",
   "dependencies": {
-    "request": "^2.85.0",
-    "request-promise-native": "^1.0.5"
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7"
   },
   "devDependencies": {},
   "scripts": {
